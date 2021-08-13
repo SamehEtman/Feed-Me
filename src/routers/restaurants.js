@@ -2,12 +2,18 @@ const express = require('express');
 const {
     getRestaurants,
     createRestaurant,
-    getRestaurant
+    getRestaurant,
+    updateRestaurant,
+    deleteRestaurant
 } = require('../controllers/restaurants');
+
 const Restaurant = require('../models/Restaurant');
 
+const servingRouter = require('./servings')
 
-const router = express.Router();
+const router = express.Router({mergeParams : true});
+
+router.use('/:restaurantId/servings' , servingRouter)
 
 router
     .route('/')
@@ -17,5 +23,7 @@ router
 router
     .route('/:id')
     .get(getRestaurant)
+    .put(updateRestaurant)
+    .delete(deleteRestaurant)
 
 module.exports = router;
