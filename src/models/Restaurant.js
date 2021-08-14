@@ -53,13 +53,16 @@ restaurantSchema = new mongoose.Schema({
 
 
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON : {virtuals : true},
+    toObject : {virtuals : true}
 });
 
 restaurantSchema.virtual('servings' , {
     ref : 'Serving',
     localField : '_id',
-    foreignField : 'restaurant'
+    foreignField : 'restaurant',
+    justOne : false
 })
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

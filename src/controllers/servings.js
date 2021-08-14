@@ -5,39 +5,37 @@ const Restaurant = require('../models/Restaurant');
 const ErrorResponse = require('../utils/ErrorResponse');
 
 //@Description      Get all servings
-//@Route            GET /api/v1/restaurants/:restaurantId/servings or /api/v1/servings
+//@Route            GET /api/v1/restaurants/:restaurantId/servings 
+//@Route            GET /api/v1/servings
 //@Access           Public
 exports.getServings = async (req, res, next) => {
     try {
-        const restaurant = await Restaurant.findById(req.params.restaurantId);
-        console.log(restaurant)
 
-        if (!restaurant) {
+        if (!req.params.restaurantId) {
+
             const servings = await Serving.find();
             console.log(servings)
-            if (!servings) {
-                return next(new ErrorResponse(`There are no services`, 404))
-            }
+
+            
             return res.status(200).json({
+                success: true,
+                count: servings.length,
+                data: servings
+            })
+        } else {
+            const restaurant = await Restaurant.findById(req.params.restaurantId);
+            const servings = await Serving.find({
+                restaurant: req.params.restaurantId
+            })
+           
+            res.status(200).json({
                 success: true,
                 count: servings.length,
                 data: servings
             })
         }
 
-        const servings = await Serving.find({
-            restaurant: req.params.restaurantId
-        })
 
-        if (!servings) {
-            return next(new ErrorResponse(`There are no services`, 404))
-
-        }
-        res.status(200).json({
-            success: true,
-            count: servings.length,
-            data: servings
-        })
 
     } catch (err) {
         next(err)

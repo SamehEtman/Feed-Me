@@ -8,41 +8,9 @@ const Restaurant = require('../models/Restaurant');
 //@Access           Public
 exports.getRestaurants = async (req, res, next) => {
     try {
-        let query;
-        const toRemove = ['select', 'skip', 'limit', 'sort']
-        let reqQuery = {
-            ...req.query
-        };
-        toRemove.forEach((key) => {
-            delete reqQuery[key];
-        })
-
-        console.log(reqQuery);
-        let queryStr = JSON.stringify(reqQuery);
-        queryStr = queryStr.replace(/(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
-
-        query = Restaurant.find(JSON.parse(queryStr)).populate('servings');
-
-        if (req.query.select) {
-            const selectFrom = req.query.select.split(',').join(' ');
-            query.select(selectFrom);
-        }
-        if (req.query.sort) {
-            const sortBy = req.query.sort.split(',').join(' ');
-            query.sort(sortBy);
-        }
-
-
-        const restaurants = await query;
-
-        if (!restaurants) {
-            return next(new ErrorResponse(`Restaurants not found`, 404));
-        }
-        res.status(200).json({
-            success: true,
-            count: restaurants.length,
-            data: restaurants
-        });
+        res.status(200).json(
+            res.advancedRes
+        );
 
     } catch (err) {
         next(err)
@@ -54,7 +22,10 @@ exports.getRestaurants = async (req, res, next) => {
 //@Access           Public
 exports.getRestaurant = async (req, res, next) => {
     try {
-        const restaurant = await Restaurant.findById(req.params.id);
+        const restaurant = await Restaurant.findById(req.params.id).populate({
+            path : 'servings',
+            select : 'name price'
+        });
 
         if (!restaurant) {
             return next(new ErrorResponse(`Restaurant not found`, 404));

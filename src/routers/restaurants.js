@@ -7,6 +7,8 @@ const {
     deleteRestaurant
 } = require('../controllers/restaurants');
 
+const advancedRes = require('../middlewares/advancedRes')
+
 const Restaurant = require('../models/Restaurant');
 
 const servingRouter = require('./servings')
@@ -17,7 +19,7 @@ router.use('/:restaurantId/servings' , servingRouter)
 
 router
     .route('/')
-    .get(getRestaurants)
+    .get(advancedRes (Restaurant , 'servings'), getRestaurants)
     .post(createRestaurant)
 
 router
