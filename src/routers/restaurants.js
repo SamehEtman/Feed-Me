@@ -4,7 +4,8 @@ const {
     createRestaurant,
     getRestaurant,
     updateRestaurant,
-    deleteRestaurant
+    deleteRestaurant,
+    getRestaurantsWithinRadius
 } = require('../controllers/restaurants');
 
 const advancedRes = require('../middlewares/advancedRes')
@@ -13,13 +14,19 @@ const Restaurant = require('../models/Restaurant');
 
 const servingRouter = require('./servings')
 
-const router = express.Router({mergeParams : true});
+const router = express.Router({
+    mergeParams: true
+});
 
-router.use('/:restaurantId/servings' , servingRouter)
+router.use('/:restaurantId/servings', servingRouter)
+
+router
+    .route('/radius')
+    .get(getRestaurantsWithinRadius)
 
 router
     .route('/')
-    .get(advancedRes (Restaurant , 'servings'), getRestaurants)
+    .get(advancedRes(Restaurant, 'servings'), getRestaurants)
     .post(createRestaurant)
 
 router
@@ -27,5 +34,7 @@ router
     .get(getRestaurant)
     .put(updateRestaurant)
     .delete(deleteRestaurant)
+
+
 
 module.exports = router;

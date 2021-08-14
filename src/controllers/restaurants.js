@@ -23,8 +23,8 @@ exports.getRestaurants = async (req, res, next) => {
 exports.getRestaurant = async (req, res, next) => {
     try {
         const restaurant = await Restaurant.findById(req.params.id).populate({
-            path : 'servings',
-            select : 'name price'
+            path: 'servings',
+            select: 'name price'
         });
 
         if (!restaurant) {
@@ -39,6 +39,51 @@ exports.getRestaurant = async (req, res, next) => {
         next(err);
     }
 }
+
+//@Description      Get a Restaurant within a radius (km)
+//@Route            GET /api/v1/restaurants/radius?lat=X&lon=Y&radius=Z
+//@Access           Public
+exports.getRestaurantsWithinRadius = async (req, res, next) => {
+    try {
+        const {
+            lat,
+            lon,
+            radius
+        } = req.query
+        console.log(lat, lon, radius)
+        if (!lat || !lon || !radius) {
+            return next(
+                new ErrorResponse("please add all the lat , lon , radius", 400)
+            )
+        }
+
+        let query =  Restaurant.find({
+            location: {
+                $near: {
+                    $maxDistance: radius * 1000,
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [lat, lon]
+                    }
+                }
+            }
+        })
+
+       
+        const restaurant = await query.select('name');
+
+
+        res.status(200).json({
+            success: true,
+            data: restaurant
+        });
+
+    } catch (err) {
+
+        next(err);
+    }
+}
+
 //@Description      create single Restaurant
 //@Route            POST /api/v1/restaurants
 //@Access           private

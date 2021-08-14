@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const ErrorResponse = require('../utils/ErrorResponse');
-
-
+const geocoder = require('../utils/geocode')
+const fs = require('fs')
 restaurantSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -36,7 +36,6 @@ restaurantSchema = new mongoose.Schema({
         },
         coordinates: {
             type: [Number],
-            index: '2dsphere'
         },
         formattedAddress: String,
         street: String,
@@ -54,15 +53,61 @@ restaurantSchema = new mongoose.Schema({
 
 }, {
     timestamps: true,
-    toJSON : {virtuals : true},
-    toObject : {virtuals : true}
+    toJSON: {
+        virtuals: true
+    },
+    toObject: {
+        virtuals: true
+    }
 });
-
-restaurantSchema.virtual('servings' , {
-    ref : 'Serving',
-    localField : '_id',
-    foreignField : 'restaurant',
-    justOne : false
+restaurantSchema.index({
+    "locatoin": "2d"
 })
+restaurantSchema.virtual('servings', {
+    ref: 'Serving',
+    localField: '_id',
+    foreignField: 'restaurant',
+    justOne: false
+})
+
+// find within radius
+
+restaurantSchema.statics.findWithInRadius = async function (latitude, longitude, radius) {
+    console.log('here')
+    console.log(radius / 6371)
+
+    return await this.find({
+        location: {
+            $near: {
+                $maxDistance: radius * 1000,
+                $geometry: {
+                    type: "Point",
+                    coordinates: [latitude, longitude]
+                }
+            }
+        }
+    })
+    
+}
+
+// fill location
+restaurantSchema.pre('save', async function (next) {
+    let location = await geocoder.geocode(this.address);
+    location = location[0]
+    this.location = {
+        type: 'Point',
+        coordinates: [location.latitude, location.longitude],
+        formattedAddress: location.formattedAddress,
+        street: location.streetName,
+        city: location.city,
+        state: location.stateCode,
+        zipcode: location.zipcode,
+        country: location.countryCode,
+    }
+    this.address = undefined;
+    next();
+
+})
+
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

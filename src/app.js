@@ -6,7 +6,7 @@ const servingRouter = require('./routers/servings')
 
 
 const connectDB = require('./dp/mongoose');
-const  errorHandling  = require('./middlewares/errorHandling');
+const errorHandling = require('./middlewares/errorHandling');
 
 connectDB();
 
@@ -17,8 +17,9 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 // mounting routes
-app.use('/api/v1/restaurants' , restaurantsRouter)
-app.use('/api/v1/servings' , servingRouter)
+
+app.use('/api/v1/restaurants', restaurantsRouter)
+app.use('/api/v1/servings', servingRouter)
 
 // error handling middleware
 app.use(errorHandling)

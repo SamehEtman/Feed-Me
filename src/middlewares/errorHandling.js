@@ -2,7 +2,7 @@ const ErrorResponse = require('../utils/ErrorResponse')
 const fs = require('fs')
 const errorHandling = (err, req, res, next) => {
     let error = Object.assign(err);
-
+    console.log(error)
     if (err.name === 'CastError') {
         const message = `Resource not found`;
         error = new ErrorResponse(message, 404);
