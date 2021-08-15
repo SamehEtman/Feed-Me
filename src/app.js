@@ -3,7 +3,7 @@ const morgan = require('morgan')
 
 const restaurantsRouter = require('./routers/restaurants')
 const servingRouter = require('./routers/servings')
-
+const userRouter = require('./routers/users')
 
 const connectDB = require('./dp/mongoose');
 const errorHandling = require('./middlewares/errorHandling');
@@ -20,7 +20,7 @@ app.use(morgan('dev'))
 
 app.use('/api/v1/restaurants', restaurantsRouter)
 app.use('/api/v1/servings', servingRouter)
-
+app.use('/api/v1/users' , userRouter);
 // error handling middleware
 app.use(errorHandling)
 

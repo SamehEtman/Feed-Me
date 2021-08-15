@@ -8,7 +8,12 @@ const {
     getRestaurantsWithinRadius
 } = require('../controllers/restaurants');
 
+// middlewares 
 const advancedRes = require('../middlewares/advancedRes')
+const {
+    auth,
+    authorize
+} = require('../middlewares/auth')
 
 const Restaurant = require('../models/Restaurant');
 
@@ -27,13 +32,13 @@ router
 router
     .route('/')
     .get(advancedRes(Restaurant, 'servings'), getRestaurants)
-    .post(createRestaurant)
+    .post(auth, authorize('publisher' ,'admin'), createRestaurant)
 
 router
     .route('/:id')
     .get(getRestaurant)
-    .put(updateRestaurant)
-    .delete(deleteRestaurant)
+    .put(auth, authorize('publisher' ,'admin'), updateRestaurant)
+    .delete(auth, authorize('publisher' ,'admin'),deleteRestaurant)
 
 
 

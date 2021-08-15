@@ -4,7 +4,7 @@ const servingSchema = new mongoose.Schema({
     name: {
         type: String,
         requierd: [true, 'Please add a name '],
-        unique: [true, 'A serving with this name already exits'],
+        unique: true,
         trim: true
     },
     price: {
@@ -22,6 +22,11 @@ const servingSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Restaurant',
         requierd: true
+    },
+    user:{
+        type : mongoose.Types.ObjectId,
+        ref : 'User',
+        required : true
     }
 });
 

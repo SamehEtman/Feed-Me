@@ -14,7 +14,6 @@ exports.getServings = async (req, res, next) => {
         if (!req.params.restaurantId) {
 
             const servings = await Serving.find();
-            console.log(servings)
 
             
             return res.status(200).json({

@@ -49,7 +49,11 @@ restaurantSchema = new mongoose.Schema({
         min: [1, 'Rating must be at least 1'],
         max: [10, 'Rating must not exceed 10']
     },
-
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: [true, "Restaurant must be assigned to a publisher"]
+    }
 
 }, {
     timestamps: true,
@@ -63,6 +67,7 @@ restaurantSchema = new mongoose.Schema({
 restaurantSchema.index({
     "locatoin": "2d"
 })
+
 restaurantSchema.virtual('servings', {
     ref: 'Serving',
     localField: '_id',
@@ -72,10 +77,7 @@ restaurantSchema.virtual('servings', {
 
 // find within radius
 
-restaurantSchema.statics.findWithInRadius = async function (latitude, longitude, radius) {
-    console.log('here')
-    console.log(radius / 6371)
-
+restaurantSchema.statics.findByRadius = async function (latitude, longitude, radius) {
     return await this.find({
         location: {
             $near: {
@@ -87,7 +89,7 @@ restaurantSchema.statics.findWithInRadius = async function (latitude, longitude,
             }
         }
     })
-    
+
 }
 
 // fill location
@@ -107,6 +109,15 @@ restaurantSchema.pre('save', async function (next) {
     this.address = undefined;
     next();
 
+})
+
+// cascade delete servings 
+restaurantSchema.pre('remove', async function (next) {
+    await this.model('Serving').deleteMany({
+        restaurant: this._id
+    });
+    console.log(`Deleting servings related to restaurant ${this._id}`)
+    next();
 })
 
 
