@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan')
-
+const cookieParser = require('cookie-parser')
 const restaurantsRouter = require('./routers/restaurants')
 const servingRouter = require('./routers/servings')
 const userRouter = require('./routers/users')
@@ -16,6 +16,7 @@ app.use(express.json())
 // logger middleware
 app.use(morgan('dev'))
 
+app.use(cookieParser())
 // mounting routes
 
 app.use('/api/v1/restaurants', restaurantsRouter)

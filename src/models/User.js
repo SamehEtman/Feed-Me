@@ -59,4 +59,13 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
+// cascade delete restaurants , servings , reviews related
+userSchema.pre('remove' , async function (){
+    await this.model('Restaurant').deleteMany({user : this._id});
+    await this.model('Serving').deleteMany({user : this._id});
+    //await this.model('Review').deleteMany({user : this._id});
+    console.log('Deleted related restaurants , servings and reviews')
+})
+
+
 module.exports = mongoose.model('User', userSchema);

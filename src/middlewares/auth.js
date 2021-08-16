@@ -7,7 +7,10 @@ const auth = async (req, res, next) => {
         let token ;
         if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
              token = req.headers.authorization.split(' ')[1];
+        }else if (req.cookies.token){
+            token = req.cookies.token
         }
+
         if (!token)
             return next(
                 new ErrorResponse(`Invalid token`, 401)
@@ -17,7 +20,9 @@ const auth = async (req, res, next) => {
         req.user = user;
         next()
     } catch (err) {
-        next(err)
+        return next (
+            new ErrorResponse(`Problem with authorization` , 400)
+        )
     }
 
 }
