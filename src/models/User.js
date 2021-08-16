@@ -54,10 +54,11 @@ userSchema.methods.generateResetPasswordToken = async function () {
         .createHash('sha256')
         .update(randomBytes)
         .digest('hex');
-        
+
     this.resetPasswordToken = hashedBytes;
-    this.resetPasswordExpire =  Date.now() + 10 * 60 * 1000;
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
     await this.save();
+
     return randomBytes;
 }
 
@@ -75,7 +76,6 @@ userSchema.pre('save', async function (next) {
         next();
     }
     this.password = await bcrypt.hash(this.password, 10);
-
     next()
 })
 

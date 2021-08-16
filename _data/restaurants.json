@@ -1,0 +1,63 @@
+[{
+  "_id": {
+    "$oid": "611ab39ad18a4c075b72bb12"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      30.83387,
+      31.20925
+    ],
+    "formattedAddress": "Shobra El Yaman, Zefta, El Gharbia, EG",
+    "street": "Shobra El Yaman",
+    "city": "Zefta",
+    "state": "El Gharbia",
+    "zipcode": "",
+    "country": "EG"
+  },
+  "photo": "no-photo.jpg",
+  "name": "Adam Cafe1",
+  "email": "ad1am23@afion.com",
+  "averageRating": 8,
+  "user": {
+    "$oid": "611ab2e3d18a4c075b72bafa"
+  },
+  "createdAt": {
+    "$date": "2021-08-16T18:51:06.235Z"
+  },
+  "updatedAt": {
+    "$date": "2021-08-16T18:51:06.235Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "611ab3cbd18a4c075b72bb23"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      30.83387,
+      31.20925
+    ],
+    "formattedAddress": "Shobra El Yaman, Zefta, El Gharbia, EG",
+    "street": "Shobra El Yaman",
+    "city": "Zefta",
+    "state": "El Gharbia",
+    "zipcode": "",
+    "country": "EG"
+  },
+  "photo": "no-photo.jpg",
+  "name": "Adam Cafe2",
+  "email": "ad1am23@afion.com",
+  "averageRating": 8,
+  "user": {
+    "$oid": "611ab338d18a4c075b72baff"
+  },
+  "createdAt": {
+    "$date": "2021-08-16T18:51:55.727Z"
+  },
+  "updatedAt": {
+    "$date": "2021-08-16T18:51:55.727Z"
+  },
+  "__v": 0
+}]

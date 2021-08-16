@@ -1,5 +1,6 @@
 const express = require('express')
 const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 
 const User = require('../models/User')
 const Serving = require('../models/Serving')
@@ -168,16 +169,16 @@ exports.forgotPassword = async (req, res, next) => {
         const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`;
 
         const options = {
-            email : req.body.email,
-            subject :'Reset Password',
-            message : `To restore your password please go to the link below 
+            email: req.body.email,
+            subject: 'Reset Password',
+            message: `To restore your password please go to the link below 
             ${resetURL}`,
         }
 
         sendEmail(options);
         res.status(200).json({
-            success : true,
-            data : {}
+            success: true,
+            data: {}
         })
 
     } catch (err) {
@@ -210,7 +211,9 @@ exports.resetPassword = async (req, res, next) => {
         if (!user) {
             return next(new ErrorResponse(`Token expired`, 400))
         }
-        user.password = req.body.password;
+        const isSame = await bcrypt.compare(req.body.password, user.password);
+        if (!isSame)
+            user.password = req.body.password;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
         await user.save();
