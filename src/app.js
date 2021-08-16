@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload')
 
 const restaurantsRouter = require('./routers/restaurants');
 const servingsRouter = require('./routers/servings');
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use(cookieParser());
+app.use(fileUpload());
 
 // mounting routes
 app.use('/api/v1/restaurants', restaurantsRouter);

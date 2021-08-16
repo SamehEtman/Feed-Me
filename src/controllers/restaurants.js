@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs')
 
 const ErrorResponse = require('../utils/ErrorResponse')
 const Restaurant = require('../models/Restaurant');
@@ -135,7 +136,60 @@ exports.updateRestaurant = async (req, res, next) => {
         next(err);
     }
 }
+//@Description      update single Restaurant
+//@Route            PUT /api/v1/restaurants/:id/photo
+//@Access           private
+exports.updatePhotoRestaurant = async (req, res, next) => {
+    try {
+        let restaurant = await Restaurant.findById(
+            req.params.id,
+        );
 
+        if (!restaurant)
+            return next(
+                new ErrorResponse(`Restaurant not found`, 404)
+            );
+
+        if (restaurant.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return next(
+                new ErrorResponse(`Not Authorized`, 401)
+            )
+        }
+        if (!req.files) {
+            return next(new ErrorResponse(`Please upload an image`, 400))
+        }
+
+        const file = req.files.file;
+        if (!file.mimetype.startsWith('image')) {
+            return next(new ErrorResponse(`Please upload an image`, 400))
+        }
+
+        const maxSize = 1000000;
+        if (file.size > maxSize) {
+            return next(new ErrorResponse(`image size must be under 1Mb`, 400))
+        }
+
+        file.name = `${restaurant._id.toString()}.${file.mimetype.split('/')[1]}`
+
+
+        file.mv(`${process.env.UPLOAD_PATH}/${file.name}`,async err => {
+            if (err) {
+                return next(new ErrorResponse(`problem with file upload`, 500))
+            }
+            await Restaurant.findByIdAndUpdate(req.params.id, {
+                photo: file.name
+            })
+            res.status(200).json({
+                success: true,
+                data: file.name
+            })
+        })
+
+
+    } catch (err) {
+        next(err);
+    }
+}
 //@Description      delete single Restauran
 //@Route            POST /api/v1/restaurants/:id
 //@Access           private

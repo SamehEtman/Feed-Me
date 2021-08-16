@@ -1,6 +1,7 @@
 const express = require('express');
 const {
     getServings,
+    getServing,
     createServing,
     updateServing,
     deleteServing
@@ -26,6 +27,7 @@ router
 
 router
     .route('/:id')
+    .get(getServing)
     .put(auth, authorize('publisher', 'admin'), updateServing)
     .delete(auth, authorize('publisher', 'admin'), deleteServing)
 
