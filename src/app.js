@@ -1,7 +1,14 @@
-const express = require('express');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
+const mongoSanitizer = require('express-mongo-sanitize')
 const fileUpload = require('express-fileupload')
+const rateLimit = require('express-rate-limit')
+const cookieParser = require('cookie-parser')
+const express = require('express')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const morgan = require('morgan')
+const cors = require('cors')
+const path = require('path')
+const hpp = require('hpp')
 
 const restaurantsRouter = require('./routers/restaurants');
 const servingsRouter = require('./routers/servings');
@@ -15,13 +22,43 @@ const errorHandling = require('./middlewares/errorHandling');
 connectDB();
 
 const app = express();
+// body parser
 app.use(express.json());
+app.use(cookieParser());
+
+// define static page 
+app.use(express.static(`${__dirname}/../public`))
 
 // logger middleware
 app.use(morgan('dev'));
 
-app.use(cookieParser());
+
+// file uploading
 app.use(fileUpload());
+
+// add safety headers
+app.use(helmet())
+
+// sanitize data 
+app.use(mongoSanitizer())
+
+// prevent XSS
+app.use(xss())
+
+//rate limiting 
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 100
+})
+app.use(limiter)
+
+// prevent http param pollution
+app.use(hpp())
+
+// Enable Cors
+app.use(cors())
+
+
 
 // mounting routes
 app.use('/api/v1/restaurants', restaurantsRouter);

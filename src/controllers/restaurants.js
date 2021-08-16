@@ -169,7 +169,7 @@ exports.updatePhotoRestaurant = async (req, res, next) => {
             return next(new ErrorResponse(`image size must be under 1Mb`, 400))
         }
 
-        file.name = `${restaurant._id.toString()}.${file.mimetype.split('/')[1]}`
+        file.name = `photo_${restaurant._id.toString()}.${file.mimetype.split('/')[1]}`
 
 
         file.mv(`${process.env.UPLOAD_PATH}/${file.name}`,async err => {
