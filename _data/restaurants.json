@@ -3,7 +3,7 @@
     "$oid": "611ab39ad18a4c075b72bb12"
   },
   "location": {
-    "type": "Point",
+    "type":  "Point",
     "coordinates": [
       30.83387,
       31.20925
