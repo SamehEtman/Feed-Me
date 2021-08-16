@@ -3,6 +3,25 @@
 
 Back end API for Feed-me website which helps your find the restaurants around you
 
+## Usage
+Rename "config/dev.env.env" to "config/dev.env" and update the values/settings to your own
+## Install Dependencies
+```bash
+npm install
+```
+## Run App
+```bash
+# Run in dev mode
+npm run dev
+```
+```bash
+# Run in prod mode
+npm start
+```
+
+# Documentaion 
+
+* The app is launched to heroku : [feed-me](https://sameh-feed-me.herokuapp.com)
 ## Indices
 
 * [Admin](#admin)
