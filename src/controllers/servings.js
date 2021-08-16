@@ -19,6 +19,13 @@ exports.getServings = async (req, res, next) => {
             return res.status(200).json(res.advancedRes)
         } else {
             const restaurant = await Restaurant.findById(req.params.restaurantId);
+            
+            if (!restaurant){
+                return next (
+                    new ErrorResponse(`Restaurant not found` , 404)
+                )
+            }
+            
             const servings = await Serving.find({
                 restaurant: req.params.restaurantId
             })
@@ -43,7 +50,7 @@ exports.getServing = async (req, res, next) => {
     try {
         const serving = await Serving.findById(req.params.id);
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: serving
         })
@@ -106,7 +113,7 @@ exports.updateServing = async (req, res, next) => {
             runValidators :true
         });
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: serving
         })
@@ -133,7 +140,7 @@ exports.deleteServing = async (req, res, next) => {
         }
         await serving.remove(); 
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: serving
         })

@@ -116,6 +116,9 @@ restaurantSchema.pre('remove', async function (next) {
     await this.model('Serving').deleteMany({
         restaurant: this._id
     });
+    await this.model('Review').deleteMany({
+        restaurant: this._id
+    });
     console.log(`Deleting servings related to restaurant ${this._id}`)
     next();
 })

@@ -87,7 +87,7 @@ userSchema.pre('remove', async function () {
     await this.model('Serving').deleteMany({
         user: this._id
     });
-    //await this.model('Review').deleteMany({user : this._id});
+    await this.model('Review').deleteMany({user : this._id});
     console.log('Deleted related restaurants , servings and reviews')
 })
 

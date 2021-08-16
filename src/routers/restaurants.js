@@ -18,12 +18,15 @@ const {
 const Restaurant = require('../models/Restaurant');
 
 const servingRouter = require('./servings')
+reviewRouter = require('./reviews')
 
 const router = express.Router({
     mergeParams: true
 });
 
 router.use('/:restaurantId/servings', servingRouter)
+router.use('/:restaurantId/reviews', reviewRouter)
+
 
 router
     .route('/radius')
