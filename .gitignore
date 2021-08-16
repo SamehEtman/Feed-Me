@@ -2,3 +2,4 @@ node_modules
 config/dev.env
 FeedMe_specs.md
 data
+public/index.html
